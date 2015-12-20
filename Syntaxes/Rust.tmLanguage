@@ -180,6 +180,18 @@
 			<key>name</key>
 			<string>string.quoted.double.raw.rust</string>
 		</dict>
+		<dict>
+			<key>name</key>
+			<string>support.constant.rust</string>
+			<key>match</key>
+			<string>\b[A-Z][A-Z_]*\b</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>support.type.rust</string>
+			<key>match</key>
+			<string>\b[A-Z][A-Za-z_0-9]*\b</string>
+		</dict>
 	</array>
 	<key>repository</key>
 	<dict>
