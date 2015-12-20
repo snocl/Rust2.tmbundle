@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>#!/usr/bin/env ruby
+require ENV["TM_SUPPORT_PATH"] + "/lib/tm/executor"
+
+module TextMate::Executor
+  class &lt;&lt; self
+    def linkify_file_references(line, dir)
+      dirs = [ dir, ENV['TM_PROJECT_DIRECTORY'] ]
+      if line =~ /^(.*?)(:(?:(\d+):)?(?:(\d+):)?)\s*(.*?)$/ and not $1.nil?
+        file, prefix, lineno, column, message = $1, $2, $3, $4, $5
+        path = dirs.map{ |dir| File.expand_path(file, dir) rescue "#{dir}/#{file}" }.find{ |path| File.file? path }
+        unless path.nil?
+          unless lineno.nil?
+            value = (message =~ /^(error|warning|note):/ ? $1 : "warning") + ":#{message}"
+            args = [ "--line=#{lineno}:#{column || '1'}", "--set-mark=#{value}" ]
+            args &lt;&lt; path if path != ENV['TM_FILEPATH'] || !ENV.has_key?('TM_FILE_IS_UNTITLED')
+            system(ENV['TM_MATE'], *args)
+          end
+    
+          relative = path
+    
+          parms =  [ ]
+          parms &lt;&lt; [   "line=#{lineno}" ] unless lineno.nil?
+          parms &lt;&lt; [ "column=#{column}" ] unless column.nil?
+    
+          if path == ENV['TM_FILEPATH'] and ENV.has_key? "TM_FILE_IS_UNTITLED"
+            parms &lt;&lt; [ "uuid=#{ENV['TM_DOCUMENT_UUID']}" ]
+            relative = file = ENV['TM_DISPLAYNAME']
+          else
+            parms &lt;&lt; [ "url=file://#{e_url path}" ]
+            relative = path.sub(/^#{Regexp.escape ENV['TM_PROJECT_DIRECTORY']}\/?/, '') if ENV.has_key? "TM_PROJECT_DIRECTORY"
+            file = File.basename(path)
+          end
+    
+          info = relative.gsub('&amp;', '&amp;amp;').gsub('&lt;', '&amp;lt;').gsub('"', '&amp;quot;')
+          return "&lt;a href=\"txmt://open?#{parms.join '&amp;'}\" title=\"#{file + prefix}\"&gt;#{info}&lt;/a&gt;:#{htmlize message}&lt;br&gt;\n"
+        end
+      end
+
+      return htmlize(fix_links_to_unsaved(line))
+    end
+  end
+end
+
+if ENV["TM_FILEPATH"]
+  Dir.chdir File.dirname ENV["TM_FILEPATH"]
+else
+  Dir.chdir ENV['TM_PROJECT_DIRECTORY']
+end
+
+while Dir.pwd != '/'
+  if File.exist? 'Cargo.toml'
+    options = {
+      :verb =&gt; "Testing",
+      :noun =&gt; File.basename(Dir.pwd),
+      :chdir =&gt; '.',
+      :use_hashbang =&gt; false,
+    }
+    TextMate::Executor.run %w(cargo test), options
+    exit
+  end
+  Dir.chdir '..'
+end
+</string>
+	<key>input</key>
+	<string>none</string>
+	<key>inputFormat</key>
+	<string>text</string>
+	<key>keyEquivalent</key>
+	<string>@R</string>
+	<key>name</key>
+	<string>Cargo Test</string>
+	<key>outputCaret</key>
+	<string>afterOutput</string>
+	<key>outputFormat</key>
+	<string>html</string>
+	<key>outputLocation</key>
+	<string>newWindow</string>
+	<key>scope</key>
+	<string>source.rs2</string>
+	<key>uuid</key>
+	<string>C065FAD5-5688-45F7-AC98-E9A5012520F1</string>
+	<key>version</key>
+	<integer>2</integer>
+</dict>
+</plist>

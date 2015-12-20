@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>name</key>
+	<string>Settings</string>
+	<key>scope</key>
+	<string>source.rs2</string>
+	<key>settings</key>
+	<dict>
+		<key>decreaseIndentPattern</key>
+		<string>}</string>
+		<key>foldingStartMarker</key>
+		<string>{</string>
+		<key>foldingStopMarker</key>
+		<string>}</string>
+		<key>increaseIndentPattern</key>
+		<string>{(?!.*})</string>
+		<key>smartTypingPairs</key>
+		<array>
+			<array>
+				<string>{</string>
+				<string>}</string>
+			</array>
+			<array>
+				<string>(</string>
+				<string>)</string>
+			</array>
+			<array>
+				<string>[</string>
+				<string>]</string>
+			</array>
+			<array>
+				<string>"</string>
+				<string>"</string>
+			</array>
+		</array>
+	</dict>
+	<key>uuid</key>
+	<string>0ABD0B94-7C35-4DBB-A3DF-96C42E0662AA</string>
+</dict>
+</plist>
