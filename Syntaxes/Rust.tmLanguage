@@ -30,7 +30,7 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b(break|continue|crate|else|extern|for|if|let|loop|match|return|unsafe|use|where|while)\b</string>
+			<string>\b(break|continue|crate|else|extern|for|if|in|let|loop|match|return|unsafe|use|where|while)\b</string>
 			<key>name</key>
 			<string>keyword.control.rust</string>
 		</dict>
